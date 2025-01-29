@@ -28,4 +28,7 @@
     <ItemGroup>
         <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext"/>
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Trippy.Infrastructure.Data\Trippy.Infrastructure.Data.csproj" />
+    </ItemGroup>
 </Project>
