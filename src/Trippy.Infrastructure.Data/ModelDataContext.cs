@@ -3,7 +3,7 @@ using Trippy.Infrastructure.Data.Models;
 
 namespace Trippy.Infrastructure.Data;
 
-public class ModelDataContext : DbContext
+public class ModelDataContext : DbContext, IModelDataContext
 {
     public virtual DbSet<TripEntity> Trips { get; set; }
 
