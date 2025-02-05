@@ -1,7 +1,10 @@
+using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+using Microsoft.OpenApi.Models;
 
 namespace Trippy.Functions.Participant.Triggers;
 
@@ -14,12 +17,17 @@ public class ModifyParticipant
         _logger = logger;
     }
 
-    [Function("ModifyParticipant")]
-    public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+    [Function(nameof(ModifyParticipant))]
+    [OpenApiOperation(nameof(ModifyParticipant))]
+    [OpenApiParameter(nameof(id), Type = typeof(int), In = ParameterLocation.Path, Required = true)]
+    [OpenApiResponseWithoutBody(HttpStatusCode.OK)]
+    [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
+    [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
+    public IActionResult Run(
+        [HttpTrigger(AuthorizationLevel.Function, "POST", "PUT", Route = "{id:int}")]
+        HttpRequest req,
+        int id)
     {
-        _logger.LogInformation("C# HTTP trigger function processed a request.");
-        return new OkObjectResult("Welcome to Azure Functions!");
-        
+        return new OkObjectResult($"You are modifying participant {id}");
     }
-
 }

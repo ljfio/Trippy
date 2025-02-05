@@ -1,7 +1,10 @@
+using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+using Microsoft.OpenApi.Models;
 
 namespace Trippy.Functions.Trip.Triggers;
 
@@ -14,12 +17,18 @@ public class GetActivities
         _logger = logger;
     }
 
-    [Function("GetActivities")]
-    public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
-    {
-        _logger.LogInformation("C# HTTP trigger function processed a request.");
-        return new OkObjectResult("Welcome to Azure Functions!");
-        
-    }
 
+    [Function(nameof(GetActivities))]
+    [OpenApiOperation(nameof(GetActivities))]
+    [OpenApiParameter(nameof(id), Type = typeof(int), In = ParameterLocation.Path, Required = true)]
+    [OpenApiResponseWithoutBody(HttpStatusCode.OK)]
+    [OpenApiResponseWithoutBody(HttpStatusCode.BadRequest)]
+    [OpenApiResponseWithoutBody(HttpStatusCode.NotFound)]
+    public IActionResult Run(
+        [HttpTrigger(AuthorizationLevel.Function, "GET", Route = "{id:int}/activities")]
+        HttpRequest req,
+        int id)
+    {
+        return new OkObjectResult($"You are requesting trip {id} activities");
+    }
 }
