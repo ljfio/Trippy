@@ -1,0 +1,22 @@
+name: Deploy Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'infra/**'
+      - '.github/workflows/infrastructure*'
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/infrastructure-deploy.yaml
+    strategy:
+      matrix:
+        target: [dev, stage, preprod, prod]
+    with:
+      environment: ${{ matrix.target }}
+      location: uksouth
+      publisherEmail: "${{ vars.PUBLISHER_EMAIL }}"
+      publisherName: "${{ vars.PUBLISHER_NAME }}"
+    secrets: inherit

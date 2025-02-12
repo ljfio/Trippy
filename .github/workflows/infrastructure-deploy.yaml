@@ -1,0 +1,46 @@
+on:
+  workflow_call:
+    inputs:
+      location:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+      publisherEmail:
+        required: true
+        type: string
+      publisherName:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log into Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deployment
+        uses: azure/bicep-deploy@v2
+        with:
+          type: deployment
+          operation: create
+          name: deploy-${{ inputs.environment }}
+          location: ${{ inputs.location }}
+          scope: subscription
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION }}
+          template-file: ./infra/main.bicep
+          parameters-file: ./infra/main.bicepparam
+          parameters: |
+            {
+              "environment": "${{ inputs.environment }}",
+              "location": "${{ inputs.location }}",
+              "publisherEmail": "${{ inputs.publisherEmail }}",
+              "publisherName": "${{ inputs.publisherName }}"
+            }
