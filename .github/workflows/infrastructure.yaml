@@ -13,7 +13,7 @@ jobs:
     uses: ./.github/workflows/infrastructure-deploy.yaml
     strategy:
       matrix:
-        target: [dev, stage, preprod, prod]
+        target: [dev, test, prod]
     with:
       environment: ${{ matrix.target }}
       location: uksouth
