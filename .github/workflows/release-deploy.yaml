@@ -1,3 +1,5 @@
+name: Deploy Functions for Environment
+
 on:
   workflow_call:
     inputs:
@@ -8,9 +10,12 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     environment:
       name: '${{ inputs.environment }}'
+
+    concurrency:
+      group: '${{ github.workflow }}-env-${{ inputs.environment }}'
+      cancel-in-progress: true
 
     steps:
       - name: Download artifact from build job
