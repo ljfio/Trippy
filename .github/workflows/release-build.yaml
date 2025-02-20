@@ -26,20 +26,26 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      - name: Build
-        run: dotnet build src --configuration Release
-
       - name: Publish Activity Functions
-        run: dotnet publish src/Trippy.Functions.Activity -c Release --runtime linux-x64 -o ${{ runner.temp }}/functions/activity
+        run: dotnet publish src/Trippy.Functions.Activity -c Release --runtime linux-x64 -o ${{ runner.temp }}/publish/activity
 
       - name: Publish Participant Functions
-        run: dotnet publish src/Trippy.Functions.Participant -c Release --runtime linux-x64 -o ${{ runner.temp }}/functions/participant
+        run: dotnet publish src/Trippy.Functions.Participant -c Release --runtime linux-x64 -o ${{ runner.temp }}/publish/participant
 
       - name: Publish Trip Functions
-        run: dotnet publish src/Trippy.Functions.Trip -c Release --runtime linux-x64 -o ${{ runner.temp }}/functions/trip
+        run: dotnet publish src/Trippy.Functions.Trip -c Release --runtime linux-x64 -o ${{ runner.temp }}/publish/trip
+
+      - name: Package Activity Functions
+        run: 7z a ${{ runner.temp }}/packages/activity.zip ${{ runner.temp }}/publish/activity
+
+      - name: Package Participant Functions
+        run: 7z a ${{ runner.temp }}/packages/participant.zip ${{ runner.temp }}/publish/participant
+
+      - name: Package Trip Functions
+        run: 7z a ${{ runner.temp }}/packages/trip.zip ${{ runner.temp }}/publish/trip
 
       - name: Upload Functions Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: functions-artifact
-          path: ${{ runner.temp }}/functions
+          path: ${{ runner.temp }}/packages

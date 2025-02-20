@@ -10,6 +10,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     environment:
       name: '${{ inputs.environment }}'
 
@@ -32,16 +33,16 @@ jobs:
         uses: Azure/functions-action@v1
         with:
           app-name: 'func-trippy-${{ inputs.environment }}-activity'
-          package: 'activity'
+          package: 'activity.zip'
 
       - name: Deploy to Participant Functions App
         uses: Azure/functions-action@v1
         with:
           app-name: 'func-trippy-${{ inputs.environment }}-participant'
-          package: 'participant'
+          package: 'participant.zip'
 
       - name: Deploy to Trip Functions App
         uses: Azure/functions-action@v1
         with:
           app-name: 'func-trippy-${{ inputs.environment }}-trip'
-          package: 'trip'
+          package: 'trip.zip'
