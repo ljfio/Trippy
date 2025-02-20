@@ -36,13 +36,13 @@ jobs:
         run: dotnet publish src/Trippy.Functions.Trip -c Release --runtime linux-x64 -o ${{ runner.temp }}/publish/trip
 
       - name: Package Activity Functions
-        run: 7z a ${{ runner.temp }}/packages/activity.zip ${{ runner.temp }}/publish/activity
+        run: 7z a ${{ runner.temp }}/packages/activity.zip ${{ runner.temp }}/publish/activity/.
 
       - name: Package Participant Functions
-        run: 7z a ${{ runner.temp }}/packages/participant.zip ${{ runner.temp }}/publish/participant
+        run: 7z a ${{ runner.temp }}/packages/participant.zip ${{ runner.temp }}/publish/participant/.
 
       - name: Package Trip Functions
-        run: 7z a ${{ runner.temp }}/packages/trip.zip ${{ runner.temp }}/publish/trip
+        run: 7z a ${{ runner.temp }}/packages/trip.zip ${{ runner.temp }}/publish/trip/.
 
       - name: Upload Functions Artifacts
         uses: actions/upload-artifact@v4
