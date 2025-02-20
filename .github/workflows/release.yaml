@@ -1,0 +1,19 @@
+name: Build and Deploy Functions
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - '.github/workflows/release*'
+
+jobs:
+  build:
+    uses: ./.github/workflows/release-build.yaml
+
+  deploy:
+    uses: ./.github/workflows/release-deploy.yaml
+    with:
+      environment: 'demo'
+    secrets: inherit

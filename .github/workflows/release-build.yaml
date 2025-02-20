@@ -1,0 +1,43 @@
+on:
+  workflow_call:
+
+env:
+  DOTNET_VERSION: '8'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Setup Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Build
+        run: dotnet build src --configuration Release
+
+      - name: Publish Activity Functions
+        run: dotnet publish src/Trippy.Functions.Activity -c Release --runtime linux-x64 -o ${{ runner.temp }}/functions/activity
+
+      - name: Publish Participant Functions
+        run: dotnet publish src/Trippy.Functions.Participant -c Release --runtime linux-x64 -o ${{ runner.temp }}/functions/participant
+
+      - name: Publish Trip Functions
+        run: dotnet publish src/Trippy.Functions.Trip -c Release --runtime linux-x64 -o ${{ runner.temp }}/functions/trip
+
+      - name: Upload Functions Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: functions-artifact
+          path: ${{ runner.temp }}/functions
