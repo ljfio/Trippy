@@ -5,11 +5,15 @@ using Microsoft.Extensions.Hosting;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
-builder.ConfigureFunctionsWebApplication();
+builder.Services.AddFunctionsWorkerDefaults();
 
-// Application Insights isn't enabled by default. See https://aka.ms/AAt8mw4.
+// Application Insights
 builder.Services
     .AddApplicationInsightsTelemetryWorkerService()
     .ConfigureFunctionsApplicationInsights();
 
-await builder.Build().RunAsync();
+builder.UseDefaultWorkerMiddleware();
+
+var host = builder.Build();
+
+await host.RunAsync();
