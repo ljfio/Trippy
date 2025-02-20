@@ -12,8 +12,20 @@ jobs:
   build:
     uses: ./.github/workflows/release-build.yaml
 
-  deploy:
+  deploy_dev:
     uses: ./.github/workflows/release-deploy.yaml
     with:
-      environment: 'demo'
+      environment: 'dev'
+    secrets: inherit
+
+  deploy_test:
+    uses: ./.github/workflows/release-deploy.yaml
+    with:
+      environment: 'test'
+    secrets: inherit
+
+  deploy_prod:
+    uses: ./.github/workflows/release-deploy.yaml
+    with:
+      environment: 'prod'
     secrets: inherit
